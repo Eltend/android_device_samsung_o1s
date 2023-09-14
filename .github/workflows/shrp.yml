@@ -7,7 +7,7 @@ env:
   # (required) shrp manifest 
   MANIFEST: https://github.com/SHRP/manifest.git
   # (required) manifest branch 
-  BRANCH: v3_11.0
+  BRANCH: shrp-12.1
   # (required) device codename i.e: sweet mojito.. 
   DEVICE: o1s
   # (required) device tree link with branch 
