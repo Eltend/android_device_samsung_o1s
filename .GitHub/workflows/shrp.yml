@@ -1,0 +1,77 @@
+name: Building Shrp
+
+on:
+  workflow_dispatch:
+
+env:
+  # (required) shrp manifest 
+  MANIFEST: https://github.com/SHRP/manifest.git
+  # (required) manifest branch 
+  BRANCH: v3_11.0
+  # (required) device codename i.e: sweet mojito.. 
+  DEVICE: o1s
+  # (required) device tree link with branch 
+  DT_LINK: https://github.com/Hasajapathirana/android_device_samsung_o1s
+  # (required) who made your phone ? 
+  MANUFACTURER: samsung
+  # (required) recovery partiton = recovery, else (no recovery partition): boot 
+  TARGET: recovery
+  # dont change that
+  IMAGE: image
+  # (required) depend of device tree if you see twrp_"codename".mk use twrp
+  # else (omni_"codename".mk): omni
+  OT: twrp
+  # dont change that
+  SYM: _
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04 
+
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v1
+                               
+       - name: remove pkg and setting repo
+         run: |
+            sudo apt update && sudo apt install git
+            git clone https://github.com/SA-17/rm_pkg pkg && cd pkg && bash setup.sh
+            cd .. && sudo -E apt-get -qq update
+            sudo -E apt-get -qq install bc build-essential tar zip curl libstdc++6 git wget python3 gcc clang libssl-dev rsync flex curl  bison aria2
+            sudo curl --create-dirs -L -o /usr/local/bin/repo -O -L https://storage.googleapis.com/git-repo-downloads/repo
+            sudo chmod a+rx /usr/local/bin/repo
+            
+       - name: Adding and Sync source
+         run: |   
+             mkdir work
+             cd work
+             repo init -u $MANIFEST -b $BRANCH --depth=1              
+             repo sync -c -j700 --force-sync --no-clone-bundle --no-tags
+             git clone $DT_LINK --depth=1 --single-branch device/$MANUFACTURER/$DEVICE          
+             
+       - name: Build shrp
+         run: | 
+              cd work
+              . build/envsetup.sh && lunch $OT$SYM$DEVICE-eng && export ALLOW_MISSING_DEPENDENCIES=true && mka $TARGET$IMAGE -j60
+              zip shrp.zip /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/$DEVICE/*_Stable-Unofficial_*
+         
+              
+       - name: Save in artifact
+         uses: actions/upload-artifact@v3
+         with:
+            name: recovery.zip
+            path: /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/shrp.zip
+            retention-days: 30
+
+       - name: Release recovery
+         uses: softprops/action-gh-release@v1
+         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         with:
+          tag_name: ${{ github.run_id }}
+          name:  SkyHawk Recovery Unofficial (o1s)
+          files: /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/o1s/*_Stable-Unofficial_*
+
+
+       
+            
