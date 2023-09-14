@@ -1,4 +1,4 @@
-name: Building Shrp
+lname: Building Shrp
 
 on:
   workflow_dispatch:
