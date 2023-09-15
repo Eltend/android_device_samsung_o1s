@@ -60,7 +60,7 @@ jobs:
          run: |
               cd work
               . build/envsetup.sh && lunch $OT$DEVICE-eng && export ALLOW_MISSING_DEPENDENCIES=true && mka pbrp -j60
-              zip pbrp.zip /home/runner/work/Recovery_builder/Recovery_builder/work/out/target/product/$DEVICE/*UNOFFICIAL*
+              zip pbrp.zip /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/$DEVICE/*UNOFFICIAL*
               ls
                          
               
@@ -68,7 +68,7 @@ jobs:
          uses: actions/upload-artifact@v2
          with:
             name: recovery.zip
-            path: /home/runner/work/Recovery_builder/Recovery_builder/work/out/target/product/p3s/*UNOFFICIAL*
+            path: /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/o1s/*zip*
             retention-days: 31
           
        - name: Release recovery
@@ -79,6 +79,6 @@ jobs:
           tag_name: ${{ github.run_id }}
           name:  PBRP Recovery For o1s (Unofficial) 
           files: |
-           /home/runner/work/Recovery_builder/Recovery_builder/work/out/target/product/$DEVICE/*UNOFFICIAL*
-           /home/runner/work/Recovery_builder/Recovery_builder/work/out/target/product/$DEVICE/*img*
+           /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/$DEVICE/*zip*
+           /home/runner/work/android_device_samsung_o1s/android_device_samsung_o1s/work/out/target/product/$DEVICE/*img*
   
