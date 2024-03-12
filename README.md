@@ -2,4 +2,4 @@
 
 How-to compile it:
 
-Launch a github workflow or download it from Releases
+download it from Releases
