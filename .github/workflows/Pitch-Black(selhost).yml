@@ -1,5 +1,7 @@
 name: Building Pbrp recovery
 
+runs-on: self-hosted
+
 on:
 #  release:
 #    types: [published]
