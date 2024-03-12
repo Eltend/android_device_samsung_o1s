@@ -1,4 +1,4 @@
-name: Building Pbrp recovery
+name: Building Pbrp recovery(self host)
 
 runs-on: self-hosted
 
