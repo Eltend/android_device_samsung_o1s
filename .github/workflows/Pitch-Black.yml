@@ -35,6 +35,7 @@ jobs:
 
        - name: remove pkg and setting repo
          run: |
+            sudo rm -rf /opt/hostedtoolcache
             sudo apt update && sudo apt install git
             git clone https://github.com/SA-17/rm_pkg pkg && cd pkg && bash setup.sh
             cd .. && sudo -E apt-get -qq update
