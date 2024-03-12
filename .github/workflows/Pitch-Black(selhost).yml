@@ -24,8 +24,9 @@ env:
   TZ: Europe/London
 
 jobs:
+  runs-on: self-hosted
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
 
     
 
